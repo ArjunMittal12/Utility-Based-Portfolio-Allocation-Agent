@@ -182,3 +182,34 @@
     border-right-color: var(--border);
   }
 }
+
+/* Override Recharts default tooltip styling */
+.recharts-default-tooltip {
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+.recharts-tooltip {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.recharts-tooltip-label {
+  color: transparent !important;
+}
+
+/* Hide the default tooltip box completely */
+.recharts-tooltip > * {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(100, 116, 139, 0.5) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}

@@ -91,6 +91,12 @@ const correlationMatrix = [
   { ticker: 'AMZN', AAPL: 0.74, MSFT: 0.8, JNJ: 0.25, JPM: 0.49, XOM: 0.33, AMZN: 1.0 },
 ]
 
+const lambdaRiskReturnData = [
+  { lambdaLabel: 'λ=0.5', expectedReturn: 25.53, riskStdDev: 25.83 },
+  { lambdaLabel: 'λ=2', expectedReturn: 25.53, riskStdDev: 25.83 },
+  { lambdaLabel: 'λ=5', expectedReturn: 24.86, riskStdDev: 24.94 },
+]
+
 const rebalanceModes = {
   1: {
     label: 'Monthly',
@@ -334,6 +340,28 @@ function AllocationTooltip({ active, payload }) {
     </div>
   )
 }
+
+function TranslucentTooltip({ active, payload, label }) {
+  if (!active || !payload?.length) {
+    return null
+  }
+
+  return (
+    <div className="rounded-xl border border-slate-700/60 bg-slate-950/80 backdrop-blur-sm px-3 py-2 text-sm text-slate-100 shadow-lg">
+      {label && <div className="font-semibold text-cyan-200 mb-1">{label}</div>}
+      {payload.map((entry, index) => (
+        <div key={index} className="text-slate-300">
+          <span style={{ color: entry.color || '#94a3b8' }} className="font-medium">
+            {entry.name}: 
+          </span>
+          {' '}{entry.value}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
 
 function CenteredYAxisLabel({ viewBox, value }) {
   if (!viewBox) {
@@ -915,7 +943,7 @@ function App() {
                         <Cell key={entry.ticker} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip content={<AllocationTooltip />} />
+                    <Tooltip content={<AllocationTooltip />} wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -937,11 +965,12 @@ function App() {
                       width={64}
                       label={<CenteredYAxisLabel value="Allocation Weight (%)" />}
                     />
-                    <Tooltip formatter={(value) => [`${value}%`, 'Weight']} />
+                    <Tooltip wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} cursor={{ fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1, radius: 4 }} contentStyle={{ backgroundColor: 'rgba(8, 10, 20, 0.92)', border: '1px solid rgba(148,163,184,0.3)', borderRadius: '10px', padding: '8px 14px', color: '#f1f5f9', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} itemStyle={{ color: '#cbd5e1' }} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} />
                     <Bar
                       dataKey="weight"
                       radius={[8, 8, 0, 0]}
                       isAnimationActive={false}
+                      activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }}
                     >
                       {allocationData.map((entry) => (
                         <Cell key={entry.ticker} fill={entry.color} />
@@ -1029,7 +1058,7 @@ function App() {
                   width={64}
                   label={<CenteredYAxisLabel value="Portfolio Value (Base = 100)" />}
                 />
-                <Tooltip />
+                <Tooltip wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }} contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.95)', border: '1px solid rgba(100, 116, 139, 0.5)', borderRadius: '8px', padding: '8px 12px', color: '#e2e8f0', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)' }} />
                 <Legend verticalAlign="top" height={30} />
                 {Object.values(adjustedProfiles).map((profile) => (
                   <Area
@@ -1072,8 +1101,52 @@ function App() {
                   width={64}
                   label={<CenteredYAxisLabel value="Number of Portfolios" />}
                 />
-                <Tooltip formatter={(value) => [value, 'Portfolios']} />
-                <Bar dataKey="count" fill={selectedProfile.color} isAnimationActive={false} />
+                <Tooltip wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} cursor={{ fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} contentStyle={{ backgroundColor: 'rgba(8, 10, 20, 0.92)', border: '1px solid rgba(148,163,184,0.3)', borderRadius: '10px', padding: '8px 14px', color: '#f1f5f9', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} itemStyle={{ color: '#cbd5e1' }} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} />
+                <Bar dataKey="count" fill={selectedProfile.color} isAnimationActive={false} activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartFrame>
+        </section>
+
+        <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
+          <SectionHeading
+            title="Risk vs Return by Lambda"
+            subtitle="Grouped bars comparing expected return and risk across risk-aversion settings."
+            accentClass="border-rose-500"
+          />
+          <ChartFrame xLabel="Lambda (Risk Aversion)">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={lambdaRiskReturnData}
+                margin={{ top: 10, right: 20, left: 26, bottom: 12 }}
+                barCategoryGap="26%"
+              >
+                <CartesianGrid stroke="#1e293b" strokeDasharray="4 4" />
+                <XAxis dataKey="lambdaLabel" stroke="#94a3b8" tick={AXIS_TICK_STYLE} />
+                <YAxis
+                  stroke="#94a3b8"
+                  tick={AXIS_TICK_STYLE}
+                  width={64}
+                  label={<CenteredYAxisLabel value="Value" />}
+                />
+                <Tooltip wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} cursor={{ fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} contentStyle={{ backgroundColor: 'rgba(8, 10, 20, 0.92)', border: '1px solid rgba(148,163,184,0.3)', borderRadius: '10px', padding: '8px 14px', color: '#f1f5f9', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} itemStyle={{ color: '#cbd5e1' }} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} />
+                <Legend verticalAlign="top" height={32} />
+                <Bar
+                  dataKey="expectedReturn"
+                  name="Expected Return (%)"
+                  fill="#22c55e"
+                  radius={[6, 6, 0, 0]}
+                  isAnimationActive={false}
+                  activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }}
+                />
+                <Bar
+                  dataKey="riskStdDev"
+                  name="Risk (Std Dev %)"
+                  fill="#ef4444"
+                  radius={[6, 6, 0, 0]}
+                  isAnimationActive={false}
+                  activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartFrame>
@@ -1128,3 +1201,4 @@ function App() {
 }
 
 export default App
+
