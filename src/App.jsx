@@ -223,7 +223,7 @@ function CenteredYAxisLabel({ viewBox, value }) {
       x={labelX}
       y={labelY}
       fill="#94a3b8"
-      fontSize={12}
+      fontSize={14}
       fontWeight={400}
       textAnchor="middle"
       dominantBaseline="central"
