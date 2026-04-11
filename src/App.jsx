@@ -745,7 +745,7 @@ function App() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="relative max-w-3xl">
               <p className="text-xs uppercase tracking-[0.32em] text-cyan-300">
-                MIT Manipal | AI + Finance Demo
+                The Rational Agents
               </p>
               <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight sm:text-5xl">
                 Utility-Based Portfolio Allocation Agent
