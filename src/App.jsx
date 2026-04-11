@@ -158,7 +158,17 @@ function ChartFrame({ xLabel, children }) {
       <div className="relative h-[320px]">
         {children}
       </div>
-      <div className="mt-0.5 text-center text-sm text-slate-300">{xLabel}</div>
+      <div
+        className="mt-0.5 text-center"
+        style={{
+          color: '#e2e8f0',
+          fontSize: '14px',
+          fontFamily: 'Manrope, sans-serif',
+          fontWeight: 500,
+        }}
+      >
+        {xLabel}
+      </div>
     </div>
   )
 }
@@ -222,9 +232,10 @@ function CenteredYAxisLabel({ viewBox, value }) {
     <text
       x={labelX}
       y={labelY}
-      fill="#94a3b8"
+      fill="#e2e8f0"
       fontSize={14}
-      fontWeight={400}
+      fontFamily="Manrope, sans-serif"
+      fontWeight={500}
       textAnchor="middle"
       dominantBaseline="central"
       transform={`rotate(-90, ${labelX}, ${labelY})`}
@@ -307,6 +318,13 @@ const FRONTIER_X_MIN = 0.035
 const FRONTIER_X_MAX = 0.09
 const FRONTIER_Y_MIN = 0.12
 const FRONTIER_Y_MAX = 0.27
+
+const AXIS_TICK_STYLE = {
+  fill: '#94a3b8',
+  fontSize: 12,
+  fontFamily: 'Manrope, sans-serif',
+  fontWeight: 400,
+}
 
 const CanvasFrontierPlot = memo(function CanvasFrontierPlot({ optimalPoints }) {
   const canvasRef = useRef(null)
@@ -411,34 +429,32 @@ const CanvasFrontierPlot = memo(function CanvasFrontierPlot({ optimalPoints }) {
         ctx.fill()
       }
 
-      optimalPoints.forEach((point, index) => {
+      const plottedOptimalPoints = optimalPoints.map((point) => {
         const adjustedVariance = clamp(point.variance, FRONTIER_X_MIN, FRONTIER_X_MAX)
         const adjustedReturn = clamp(point.return, FRONTIER_Y_MIN, FRONTIER_Y_MAX)
-        const x = xToPx(adjustedVariance)
-        const y = yToPx(adjustedReturn)
 
+        return {
+          ...point,
+          x: xToPx(adjustedVariance),
+          y: yToPx(adjustedReturn),
+        }
+      })
+
+      plottedOptimalPoints.forEach((point) => {
         ctx.fillStyle = point.color
         ctx.beginPath()
-        ctx.arc(x, y, 6, 0, Math.PI * 2)
+        ctx.arc(point.x, point.y, 6, 0, Math.PI * 2)
         ctx.fill()
 
         ctx.strokeStyle = '#e2e8f0'
         ctx.lineWidth = 1.2
         ctx.beginPath()
-        ctx.arc(x, y, 6, 0, Math.PI * 2)
+        ctx.arc(point.x, point.y, 6, 0, Math.PI * 2)
         ctx.stroke()
-        
-        const labelOffsetX = index === 2 ? 10 : -10
-        const labelAlign = index === 2 ? 'left' : 'right'
-        ctx.fillStyle = '#cbd5e1'
-        ctx.font = '11px Manrope, sans-serif'
-        ctx.textAlign = labelAlign
-        ctx.textBaseline = 'middle'
-        ctx.fillText(point.name, x + labelOffsetX, y - 10)
       })
 
-      ctx.fillStyle = '#94a3b8'
-      ctx.font = '12px Manrope, sans-serif'
+      ctx.fillStyle = '#e2e8f0'
+      ctx.font = '500 14px Manrope, sans-serif'
       ctx.save()
       ctx.translate(pad.left - 46, pad.top + plotHeight / 2)
       ctx.rotate(-Math.PI / 2)
@@ -446,6 +462,7 @@ const CanvasFrontierPlot = memo(function CanvasFrontierPlot({ optimalPoints }) {
       ctx.textBaseline = 'middle'
       ctx.fillText('Expected Return', 0, 0)
       ctx.restore()
+
     }
 
     draw()
@@ -767,9 +784,10 @@ function App() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={allocationData} margin={{ top: 10, right: 20, left: 26, bottom: 12 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                    <XAxis dataKey="ticker" stroke="#94a3b8" />
+                    <XAxis dataKey="ticker" stroke="#94a3b8" tick={AXIS_TICK_STYLE} />
                     <YAxis
                       stroke="#94a3b8"
+                      tick={AXIS_TICK_STYLE}
                       unit="%"
                       width={64}
                       label={<CenteredYAxisLabel value="Allocation Weight (%)" />}
@@ -853,9 +871,10 @@ function App() {
                 margin={{ top: 10, right: 20, left: 26, bottom: 12 }}
               >
                 <CartesianGrid stroke="#1e293b" strokeDasharray="4 4" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
+                <XAxis dataKey="month" stroke="#94a3b8" tick={AXIS_TICK_STYLE} />
                 <YAxis
                   stroke="#94a3b8"
+                  tick={AXIS_TICK_STYLE}
                   width={64}
                   label={<CenteredYAxisLabel value="Portfolio Value (Base = 100)" />}
                 />
@@ -889,9 +908,10 @@ function App() {
                 margin={{ top: 10, right: 20, left: 26, bottom: 12 }}
               >
                 <CartesianGrid stroke="#1e293b" strokeDasharray="4 4" />
-                <XAxis dataKey="mid" stroke="#94a3b8" unit="%" />
+                <XAxis dataKey="mid" stroke="#94a3b8" tick={AXIS_TICK_STYLE} unit="%" />
                 <YAxis
                   stroke="#94a3b8"
+                  tick={AXIS_TICK_STYLE}
                   width={64}
                   label={<CenteredYAxisLabel value="Number of Portfolios" />}
                 />
