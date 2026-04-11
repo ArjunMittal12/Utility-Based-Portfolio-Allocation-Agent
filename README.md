@@ -244,19 +244,16 @@ npm run dev
 
 ---
 
-## 👨‍💻 Authors
+## 👨‍💻 Author
 
-**MIT Manipal — CCE-A Section**
-*Course: Intelligent Agents & AI (IAI)*
+**Vector**  
+GitHub: [@HalcyonVector](https://github.com/HalcyonVector)  
 
-| Name |
-|------|
-| Sagnik Basu |
-| Arjun Mittal |
-| Ishitaa Sahu |
-| Prakhyath Immaneni |
-| Anshul Sekuri |
-| Pagavath D P |
+## 🙋 Support
+
+Found a bug or have a feature request?  
+[Open an issue](https://github.com/HalcyonVector/formflow/issues) on GitHub.
+
 
 ---
 
