@@ -246,13 +246,13 @@ npm run dev
 
 ## 👨‍💻 Author
 
-**Vector**  
-GitHub: [@HalcyonVector](https://github.com/HalcyonVector)  
+**Arjun Mittal**  
+GitHub: [@ArjunMittal12](https://github.com/ArjunMittal12)  
 
 ## 🙋 Support
 
 Found a bug or have a feature request?  
-[Open an issue](https://github.com/HalcyonVector/formflow/issues) on GitHub.
+Open an issue in the repository after pushing to GitHub.
 
 
 ---

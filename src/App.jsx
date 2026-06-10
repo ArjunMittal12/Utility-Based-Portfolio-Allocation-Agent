@@ -18,12 +18,12 @@ import {
 } from 'recharts'
 
 const assets = [
-  { ticker: 'AAPL', sector: 'Technology', expectedReturn: 12.8, risk: 17.4, color: '#fb7185' },
-  { ticker: 'MSFT', sector: 'Technology', expectedReturn: 11.9, risk: 15.1, color: '#f97316' },
-  { ticker: 'JNJ', sector: 'Healthcare', expectedReturn: 8.2, risk: 8.4, color: '#f59e0b' },
-  { ticker: 'JPM', sector: 'Financials', expectedReturn: 10.2, risk: 14.3, color: '#22c55e' },
-  { ticker: 'XOM', sector: 'Energy', expectedReturn: 9.1, risk: 12.2, color: '#ef4444' },
-  { ticker: 'AMZN', sector: 'Consumer Discretionary', expectedReturn: 14.5, risk: 21.5, color: '#e879f9' },
+  { ticker: 'AAPL', sector: 'Technology', expectedReturn: 29.79, risk: 31.68, color: '#fb7185' },
+  { ticker: 'MSFT', sector: 'Technology', expectedReturn: 24.89, risk: 30.5, color: '#f97316' },
+  { ticker: 'JNJ', sector: 'Healthcare', expectedReturn: 4.52, risk: 19.66, color: '#f59e0b' },
+  { ticker: 'JPM', sector: 'Financials', expectedReturn: 18.79, risk: 32.53, color: '#22c55e' },
+  { ticker: 'XOM', sector: 'Energy', expectedReturn: 19.13, risk: 34.38, color: '#ef4444' },
+  { ticker: 'AMZN', sector: 'Consumer Discretionary', expectedReturn: 23.27, risk: 35.96, color: '#e879f9' },
 ]
 
 const sectorStyles = {
@@ -48,29 +48,35 @@ const profiles = {
   aggressive: {
     name: 'Aggressive',
     lambda: 0.5,
-    return: 13.9,
-    risk: 17.2,
-    utility: 12.42,
+    return: 25.88,
+    risk: 26.53,
+    utility: 0.2412,
     color: '#f97316',
-    allocation: [22, 18, 8, 15, 10, 27],
+    frontierReturn: 0.2588,
+    frontierVariance: 0.0704,
+    allocation: [56.81, 21.58, 1.41, 12.05, 0.82, 7.33],
   },
   balanced: {
     name: 'Balanced',
     lambda: 2,
-    return: 11.2,
-    risk: 12.9,
-    utility: 9.54,
+    return: 25.73,
+    risk: 25.96,
+    utility: 0.1899,
     color: '#22c55e',
-    allocation: [20, 23, 18, 14, 13, 12],
+    frontierReturn: 0.2573,
+    frontierVariance: 0.0674,
+    allocation: [44.52, 10.12, 0.51, 4.37, 26.4, 14.07],
   },
   conservative: {
     name: 'Conservative',
     lambda: 5,
-    return: 8.7,
-    risk: 9.1,
-    utility: 6.63,
+    return: 23.79,
+    risk: 24.12,
+    utility: 0.0924,
     color: '#60a5fa',
-    allocation: [16, 22, 27, 12, 15, 8],
+    frontierReturn: 0.2379,
+    frontierVariance: 0.0582,
+    allocation: [39.88, 7.95, 6.75, 7.26, 18.99, 19.17],
   },
 }
 
@@ -83,18 +89,29 @@ const steps = [
 ]
 
 const correlationMatrix = [
-  { ticker: 'AAPL', AAPL: 1.0, MSFT: 0.78, JNJ: 0.32, JPM: 0.55, XOM: 0.41, AMZN: 0.74 },
-  { ticker: 'MSFT', AAPL: 0.78, MSFT: 1.0, JNJ: 0.29, JPM: 0.52, XOM: 0.37, AMZN: 0.8 },
-  { ticker: 'JNJ', AAPL: 0.32, MSFT: 0.29, JNJ: 1.0, JPM: 0.34, XOM: 0.27, AMZN: 0.25 },
-  { ticker: 'JPM', AAPL: 0.55, MSFT: 0.52, JNJ: 0.34, JPM: 1.0, XOM: 0.61, AMZN: 0.49 },
-  { ticker: 'XOM', AAPL: 0.41, MSFT: 0.37, JNJ: 0.27, JPM: 0.61, XOM: 1.0, AMZN: 0.33 },
-  { ticker: 'AMZN', AAPL: 0.74, MSFT: 0.8, JNJ: 0.25, JPM: 0.49, XOM: 0.33, AMZN: 1.0 },
+  { ticker: 'AAPL', AAPL: 1.0, MSFT: 0.75, JNJ: 0.37, JPM: 0.41, XOM: 0.28, AMZN: 0.59 },
+  { ticker: 'MSFT', AAPL: 0.75, MSFT: 1.0, JNJ: 0.38, JPM: 0.42, XOM: 0.24, AMZN: 0.68 },
+  { ticker: 'JNJ', AAPL: 0.37, MSFT: 0.38, JNJ: 1.0, JPM: 0.41, XOM: 0.3, AMZN: 0.18 },
+  { ticker: 'JPM', AAPL: 0.41, MSFT: 0.42, JNJ: 0.41, JPM: 1.0, XOM: 0.57, AMZN: 0.27 },
+  { ticker: 'XOM', AAPL: 0.28, MSFT: 0.24, JNJ: 0.3, JPM: 0.57, XOM: 1.0, AMZN: 0.13 },
+  { ticker: 'AMZN', AAPL: 0.59, MSFT: 0.68, JNJ: 0.18, JPM: 0.27, XOM: 0.13, AMZN: 1.0 },
 ]
 
 const lambdaRiskReturnData = [
-  { lambdaLabel: 'λ=0.5', expectedReturn: 25.53, riskStdDev: 25.83 },
-  { lambdaLabel: 'λ=2', expectedReturn: 25.53, riskStdDev: 25.83 },
-  { lambdaLabel: 'λ=5', expectedReturn: 24.86, riskStdDev: 24.94 },
+  { lambdaLabel: 'λ=0.5', expectedReturn: 25.88, riskStdDev: 26.53 },
+  { lambdaLabel: 'λ=2', expectedReturn: 25.73, riskStdDev: 25.96 },
+  { lambdaLabel: 'λ=5', expectedReturn: 23.79, riskStdDev: 24.12 },
+]
+
+const frontierExpectedReturns = [0.2979, 0.2489, 0.0452, 0.1879, 0.1913, 0.2327]
+
+const frontierCovarianceMatrix = [
+  [0.100354, 0.072297, 0.023303, 0.04229, 0.030696, 0.067469],
+  [0.072297, 0.093008, 0.02272, 0.041789, 0.025385, 0.074418],
+  [0.023303, 0.02272, 0.038638, 0.026271, 0.020314, 0.012666],
+  [0.04229, 0.041789, 0.026271, 0.105798, 0.063511, 0.031115],
+  [0.030696, 0.025385, 0.020314, 0.063511, 0.118196, 0.016162],
+  [0.067469, 0.074418, 0.012666, 0.031115, 0.016162, 0.129341],
 ]
 
 const rebalanceModes = {
@@ -123,28 +140,28 @@ function seededRandom(seed) {
   return x - Math.floor(x)
 }
 
-function frontierTopReturn(variance) {
-  return 0.04 + 3.5 * variance - 10 * variance * variance
+function dotProduct(left, right) {
+  return left.reduce((sum, value, index) => sum + value * right[index], 0)
 }
 
-const FRONTIER_BASE_VARIANCE = {
-  aggressive: 0.067,
-  balanced: 0.068,
-  conservative: 0.063,
+function multiplyMatrixVector(matrix, vector) {
+  return matrix.map((row) => dotProduct(row, vector))
 }
 
 function generateFrontierData() {
   const data = []
 
   for (let i = 1; i <= 5000; i += 1) {
-    const ratio = i / 5000
-    const variance = 0.04 + ratio * 0.035 + (seededRandom(i * 11) - 0.5) * 0.0012
-    const maxReturn = frontierTopReturn(variance)
-    const dispersion = seededRandom(i * 17) * 0.035
+    const weights = assets.map((_, index) => seededRandom(i * 37 + index * 11) + 0.01)
+    const total = weights.reduce((sum, value) => sum + value, 0)
+    const normalizedWeights = weights.map((value) => value / total)
+    const covarianceTimesWeights = multiplyMatrixVector(frontierCovarianceMatrix, normalizedWeights)
+    const portfolioReturn = dotProduct(normalizedWeights, frontierExpectedReturns)
+    const portfolioVariance = dotProduct(normalizedWeights, covarianceTimesWeights)
 
     data.push({
-      variance: Number(variance.toFixed(4)),
-      return: Number((maxReturn - dispersion).toFixed(4)),
+      variance: Number(portfolioVariance.toFixed(4)),
+      return: Number(portfolioReturn.toFixed(4)),
     })
   }
 
@@ -239,8 +256,8 @@ function ExportButton({ label, exporting, onClick, tone = 'primary' }) {
 }
 
 function MiniBars({ expectedReturn, risk, color }) {
-  const returnWidth = clamp((expectedReturn / 16) * 100, 34, 100)
-  const riskWidth = clamp((risk / 24) * 100, 34, 100)
+  const returnWidth = clamp((expectedReturn / 35) * 100, 34, 100)
+  const riskWidth = clamp((risk / 40) * 100, 34, 100)
 
   return (
     <div className="mt-4 rounded-2xl border border-white/5 bg-black/20 p-3">
@@ -271,7 +288,7 @@ function MiniBars({ expectedReturn, risk, color }) {
 function getCorrelationCellStyle(value) {
   const start = { r: 37, g: 99, b: 235 }
   const mid = { r: 248, g: 250, b: 252 }
-  const end = { r: 234, g: 88, b: 12 }
+  const end = { r: 220, g: 38, b: 38 }
   const normalized = clamp((value - 0.25) / 0.75, 0, 1)
 
   const mix = normalized < 0.5
@@ -395,10 +412,7 @@ function computeAdjustedProfiles(mode) {
   return Object.fromEntries(
     Object.entries(profiles).map(([key, profile]) => {
       const adjustedRisk = Number((profile.risk * rebalance.riskFactor).toFixed(2))
-      const adjustedReturn = Number(
-        (profile.return * rebalance.returnFactor).toFixed(2),
-      )
-      const utilityBase = adjustedReturn - profile.lambda * ((adjustedRisk / 10) ** 2) * 0.1
+      const adjustedReturn = Number((profile.return * rebalance.returnFactor).toFixed(2))
 
       return [
         key,
@@ -406,7 +420,7 @@ function computeAdjustedProfiles(mode) {
           ...profile,
           return: adjustedReturn,
           risk: adjustedRisk,
-          utility: Number((utilityBase * rebalance.utilityFactor).toFixed(2)),
+          utility: Number((profile.utility * rebalance.utilityFactor).toFixed(4)),
           allocation: adjustAllocation(profile.allocation, mode),
         },
       ]
@@ -635,7 +649,7 @@ const EfficientFrontierSection = memo(function EfficientFrontierSection({
     <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
       <SectionHeading
         title="Efficient Frontier"
-        subtitle="The three optimized portfolios are emphasized with larger glowing markers."
+        subtitle="Scatter plot of 5,000 simulated portfolios showing the risk-return tradeoff with optimal points highlighted for each profile."
         accentClass="border-rose-500"
       />
       <p className="mt-2 text-sm text-slate-400">
@@ -689,10 +703,10 @@ function App() {
 
   const optimalPoints = useMemo(
     () =>
-      Object.entries(adjustedProfiles).map(([key, profile]) => {
+      Object.entries(adjustedProfiles).map(([, profile]) => {
         const variance = Number(
           (
-            FRONTIER_BASE_VARIANCE[key] *
+            profile.frontierVariance *
             Math.pow(rebalanceModes[safeMode].riskFactor, 2)
           ).toFixed(4),
         )
@@ -700,7 +714,7 @@ function App() {
         return {
           name: profile.name,
           variance,
-          return: Number(frontierTopReturn(variance).toFixed(4)),
+          return: Number((profile.frontierReturn * rebalanceModes[safeMode].returnFactor).toFixed(4)),
           color: profile.color,
         }
       }),
@@ -827,7 +841,7 @@ function App() {
         <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
           <SectionHeading
             title="Asset Overview"
-            subtitle="Each card now carries a sector tag and a tiny return-vs-risk view for quicker scanning."
+            subtitle="Individual stock cards showing expected return, risk, and sector classification for each holding."
             accentClass="border-rose-500"
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -870,7 +884,7 @@ function App() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <SectionHeading
               title="Portfolio Simulator"
-              subtitle="Switch the profile and rebalance frequency to see the allocation change."
+              subtitle="Interactive allocation breakdown showing asset weights and portfolio composition for each investor profile."
               accentClass="border-orange-400"
             />
             <div className="flex flex-wrap gap-2">
@@ -962,6 +976,8 @@ function App() {
                       stroke="#94a3b8"
                       tick={AXIS_TICK_STYLE}
                       unit="%"
+                      domain={[0, 60]}
+                      tickCount={7}
                       width={64}
                       label={<CenteredYAxisLabel value="Allocation Weight (%)" />}
                     />
@@ -991,7 +1007,7 @@ function App() {
         <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
           <SectionHeading
             title="Correlation Heatmap"
-            subtitle="A diverging blue-to-red scale makes the matrix easier to read and less misleading."
+            subtitle="Pairwise correlation matrix for all six equities showing asset relationships and co-movement patterns."
             accentClass="border-rose-400"
           />
           <p className="mt-2 text-sm text-slate-400">
@@ -1038,7 +1054,7 @@ function App() {
         <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
           <SectionHeading
             title="Cumulative Growth"
-            subtitle="Thicker lines and soft area fills make the growth curves easier to compare at a glance."
+            subtitle="24-month simulated portfolio growth trajectories for each investor profile showing cumulative value over time."
             accentClass="border-orange-400"
           />
           <p className="mt-2 text-sm text-slate-400">
@@ -1081,7 +1097,7 @@ function App() {
         <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
           <SectionHeading
             title="Monte Carlo Return Distribution"
-            subtitle="Histogram bars highlight the spread of simulated annual outcomes for the active profile."
+            subtitle="Distribution of 5,000 simulated annual returns for the active profile showing possible outcome ranges and frequencies."
             accentClass="border-rose-500"
           />
           <p className="mt-2 text-sm text-slate-400">
@@ -1102,7 +1118,7 @@ function App() {
                   label={<CenteredYAxisLabel value="Number of Portfolios" />}
                 />
                 <Tooltip wrapperStyle={{ backgroundColor: 'transparent', outline: 'none' }} cursor={{ fill: 'rgba(255,255,255,0.05)', stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} contentStyle={{ backgroundColor: 'rgba(8, 10, 20, 0.92)', border: '1px solid rgba(148,163,184,0.3)', borderRadius: '10px', padding: '8px 14px', color: '#f1f5f9', boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }} itemStyle={{ color: '#cbd5e1' }} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} />
-                <Bar dataKey="count" fill={selectedProfile.color} isAnimationActive={false} activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }} />
+                <Bar dataKey="count" fill="#f87171" isAnimationActive={false} activeBar={{ fillOpacity: 1, filter: 'brightness(1.25)', stroke: 'rgba(255,255,255,0.25)', strokeWidth: 1.5 }} />
               </BarChart>
             </ResponsiveContainer>
           </ChartFrame>
@@ -1111,7 +1127,7 @@ function App() {
         <section className="rounded-3xl border border-rose-500/15 bg-[#12070b]/76 p-6 shadow-[0_0_0_1px_rgba(244,63,94,0.05)] sm:p-8">
           <SectionHeading
             title="Risk vs Return by Lambda"
-            subtitle="Grouped bars comparing expected return and risk across risk-aversion settings."
+            subtitle="Side-by-side comparison of expected return and risk (volatility) across the three investor risk-aversion profiles."
             accentClass="border-rose-500"
           />
           <ChartFrame xLabel="Lambda (Risk Aversion)">
@@ -1187,7 +1203,7 @@ function App() {
                   <div className="rounded-xl bg-slate-900 p-3">
                     <dt className="text-slate-400">Utility Score</dt>
                     <dd className="mt-1 text-base font-semibold text-cyan-200">
-                      {profile.utility}
+                      {profile.utility.toFixed(4)}
                     </dd>
                   </div>
                 </dl>

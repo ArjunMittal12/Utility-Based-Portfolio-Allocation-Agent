@@ -2,6 +2,11 @@
   "name": "utility-portfolio-agent-demo",
   "private": true,
   "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArjunMittal12/Utility-Based-Portfolio-Allocation-Agent.git"
+  },
+  "homepage": "https://ArjunMittal12.github.io/Utility-Based-Portfolio-Allocation-Agent/",
   "type": "module",
   "scripts": {
     "dev": "vite",
