@@ -195,6 +195,7 @@ function drawRoundedRect(ctx, x, y, width, height, radius) {
   ctx.closePath()
 }
 
+
 function ChartFrame({ xLabel, children }) {
   return (
     <div className="relative rounded-2xl border border-rose-500/15 bg-[#090408]/70 px-4 pb-2 pt-3">
@@ -1033,7 +1034,6 @@ function App() {
                     </td>
                     {assets.map((asset) => {
                       const value = row[asset.ticker]
-                      const colorStrength = Math.round((value + 1) * 50)
                       return (
                         <td
                           key={`${row.ticker}-${asset.ticker}`}
