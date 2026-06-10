@@ -1,6 +1,6 @@
 # 📈 Utility-Based Portfolio Allocation Agent — Interactive Demo
 
-A React-based interactive dashboard for visualizing an AI-driven portfolio allocation engine that selects optimal stock weights by maximizing expected utility across three investor risk profiles. Built as a course demo for **Intelligent Agents & AI (IAI)** at MIT Manipal.
+A React-based interactive dashboard for visualizing an AI-driven portfolio allocation engine that selects optimal stock weights by maximizing expected utility across three investor risk profiles. Built as a course demo for **Introduction to AI (IAI)** at MIT Manipal.
 
 ---
 
